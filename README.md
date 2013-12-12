@@ -1,12 +1,14 @@
 # grunt-flexcombo
 
-> [flex-combo](https://npmjs.org/package/flex-combo)插件的grunt版本.
+![](http://gtms01.alicdn.com/tps/i1/T1TgNqFB0bXXbX25fJ-346-77.png)
+
+[flex-combo](https://npmjs.org/package/flex-combo)的grunt插件版本，[Grunt-Flexcombo 原理](https://speakerdeck.com/lijing00333/grunt-flexcombo)。
 
 ## Getting Started
 
 依赖 Grunt 版本`~0.4.1`
 
-安装
+安装grunt-flexcombo
 
 ```shell
 npm install grunt-flexcombo --save-dev
@@ -27,30 +29,43 @@ grunt.loadNpmTasks('grunt-flexcombo');
 ```js
 grunt.initConfig({
 	flexcombo:{
-		options: {
-			target:'src',
-			urls:'/group/project',
-			port:'80',
-			servlet:'?',
-			separator:',',
-			charset:'utf8'
-		},
-		main:{}
+		main:{
+			options: {
+				target:'src',
+				urls:'/group/project',
+				port:'80',// flexcombo服务
+				proxyport:'8080',// 反向代理服务 
+				servlet:'?',//开启combo的字符串
+				separator:',',//多文件分隔符
+				charset:'utf8',//默认输出文件的编码
+				proxyHosts:['a.com','b.com'],//本地服务的域名
+				// 过滤参数
+				filter:{ 
+					'-min\\.js':'.js'
+				}
+			}
+		}
 	}
 });
 ```
+options的更多配置请参照[flex-combo](https://npmjs.org/package/flex-combo)。
 
-你的host指向开发机，访问http://host/group/projecct，浏览你的页面和assets文件
+flexcombo将在本地启动两个服务
 
-将cdn配向开发机
-	
-	127.0.0.1 g.tbcdn.cn
+![](http://gtms01.alicdn.com/tps/i1/T1.ey8FnleXXcxFyEb-523-342.png)
 
-可以访问你的页面和asset文件
+启动服务后，可以直接通过`localhost`来预览本地文件
 
-	http://g.tbcdn.cn/group/project
+	http://localhost/group/project
 
-更多配置请参照[flex-combo](https://npmjs.org/package/flex-combo)。
+若要模拟真实环境调试，两种方法（二者取其一）：
+
+1. 将cdn配向开发机`127.0.0.1 g.tbcdn.cn a.tbcdn.cn`
+1. 将浏览器或者设备HTTP代理配置到本机的反向代理服务的端口
+
+比如在手机终端设置代理方法：
+
+![](http://gtms01.alicdn.com/tps/i1/T1bePRFlVXXXXhb4nD-502-341.png)
 
 ## 说明
 
@@ -58,10 +73,13 @@ grunt.initConfig({
 
 	<!--#include path="asdf.html" -->
 
-## 使用
+## 使用案例1
 
-建议同[generator-clam](https://npmjs.org/package/generator-clam)一同使用，构建工具生成本地配置文件，形如：
+[KISSY 组件如何调试线上代码](http://blog.kissyui.com/2013/11/29/%E5%A6%82%E4%BD%95%E5%BF%AB%E9%80%9F%E5%9C%A8%E7%BA%BF%E8%B0%83%E5%BC%8F%E4%BD%A0%E7%9A%84gallery%E7%BB%84%E4%BB%B6/)
 
+## 使用案例2
+
+KISSY项目构建工具和本地环境：[generator-clam](https://npmjs.org/package/generator-clam)一同使用，构建工具生成本地配置文件，形如：
 
 	flexcombo:{
 		options: {

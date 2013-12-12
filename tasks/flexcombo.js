@@ -30,6 +30,11 @@ module.exports = function(grunt) {
 		var proxyport = options.proxyport || 8080;
 		var prefix = options.urls;
 		var localPath = options.target;
+		if(typeof options.proxyHosts === 'object'){
+			var proxyHosts = options.proxyHosts;
+		} else if(typeof options.proxyHosts === 'string') {
+			var proxyHosts = [options.proxyHosts];
+		}
 
 		var obj = {};
 		obj[options.urls] = options.target;
@@ -42,6 +47,16 @@ module.exports = function(grunt) {
 			map: function (config) {
 				if(/[ag]\.tbcdn\.cn/i.test(config.host)){
 					config.host = 'localhost';
+				}
+				var proxyHost = false;
+				proxyHosts.forEach(function(v,k){
+					if(config.host.indexOf(v) >= 0){
+						proxyHost = true;
+					}
+				});
+				if(proxyHost){
+					config.host = 'localhost';
+					config.path = prefix + config.path;
 				}
 				return config;
 			}
@@ -85,9 +100,13 @@ module.exports = function(grunt) {
 			});
 		}).listen(port);
 		console.log('\nPreview: ' + green('http://localhost'+prefix+'/'));
-		console.log('\n"localhost" should be '+green('"a.tbcdn.cn"')+' or '+green('"g.tbcdn.cn"'));
 		console.log('\nFlex Combo Server running at '+blue('http://127.0.0.1:'+port));
-		console.log('\nHelp: '+ blue('https://npmjs.org/flex-combo'));
+		console.log('Reverse-Proxy running at '+blue('http://127.0.0.1:'+proxyport));
+		console.log('\nYou Can:');
+		console.log('  Host: 127.0.0.1 '+green('a.tbcdn.cn')+' '+green('g.tbcdn.cn'));
+		console.log(yellow('OR'));
+		console.log('  Configure Browser HTTP Proxy or Mobi Device HTTP Proxy: '+green('IP:'+proxyport));
+		console.log('\nHelp: '+ blue('https://npmjs.org/grunt-flexcombo'));
 	});
 
 };

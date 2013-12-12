@@ -1,7 +1,7 @@
 {
   "name": "grunt-flexcombo",
   "description": "The best Grunt plugin ever.",
-  "version": "0.1.15",
+  "version": "0.1.18",
   "homepage": "",
   "author": {
     "name": "bachi",
@@ -31,7 +31,7 @@
   "dependencies": {
     "flex-combo": "",
     "jayli-server": "",
-	"reverse-proxy":"~0.2.1"
+    "reverse-proxy": "~0.2.1"
   },
   "peerDependencies": {
     "grunt": "~0.4.1"
@@ -39,8 +39,7 @@
   "keywords": [
     "gruntplugin"
   ],
-  "readme": "# grunt-flexcombo\n\n> [flex-combo](https://npmjs.org/package/flex-combo)插件的grunt版本.\n\n## Getting Started\n\n依赖 Grunt 版本`~0.4.1`\n\n安装\n\n```shell\nnpm install grunt-flexcombo --save-dev\n```\n\n安装后，在Gruntfile.js中载入任务\n\n```js\ngrunt.loadNpmTasks('grunt-flexcombo');\n```\n\n## \"flexcombo\" 任务配置\n\n### 步骤\n\n在`grunt.initConfig()`中添加flexcombo的配置：\n\n```js\ngrunt.initConfig({\n\tflexcombo:{\n\t\toptions: {\n\t\t\ttarget:'src',\n\t\t\turls:'/group/project',\n\t\t\tport:'80',\n\t\t\tservlet:'?',\n\t\t\tseparator:',',\n\t\t\tcharset:'utf8'\n\t\t},\n\t\tmain:{}\n\t}\n});\n```\n\n你的host指向开发机，访问http://host/group/projecct，浏览你的页面和assets文件\n\n将cdn配向开发机\n\t\n\t127.0.0.1 g.tbcdn.cn\n\n可以访问你的页面和asset文件\n\n\thttp://g.tbcdn.cn/group/project\n\n更多配置请参照[flex-combo](https://npmjs.org/package/flex-combo)。\n\n## 说明\n\n该服务添加了[jayli-server](https://npmjs.org/package/jayli-server)，支持标准格式的 SSI include\n\n\t<!--#include path=\"asdf.html\" -->\n\n## 使用\n\n建议同[generator-clam](https://npmjs.org/package/generator-clam)一同使用，构建工具生成本地配置文件，形如：\n\n\n\tflexcombo:{\n\t\toptions: {\n\t\t\ttarget:'src',\n\t\t\turls:'/<%= pkg.group %>/<%= pkg.name %>',\n\t\t\tport:'<%= port %>',\n\t\t\tservlet:'?',\n\t\t\tseparator:',',\n\t\t\tcharset:'utf8'\n\t\t},\n\t\tmain:{}\n\t}\n\n执行任务\n\n\ttask.run(['flexcombo']);\n",
   "readmeFilename": "README.md",
-  "_id": "grunt-flexcombo@0.1.12",
+  "_id": "grunt-flexcombo@0.1.15",
   "_from": "grunt-flexcombo@"
 }

@@ -1,4 +1,4 @@
-/*
+/**
  * grunt-flexcombo
  * 
  *
@@ -34,6 +34,8 @@ module.exports = function(grunt) {
 			var proxyHosts = options.proxyHosts;
 		} else if(typeof options.proxyHosts === 'string') {
 			var proxyHosts = [options.proxyHosts];
+		} else {
+			var proxyHosts = [];
 		}
 
 		var obj = {};

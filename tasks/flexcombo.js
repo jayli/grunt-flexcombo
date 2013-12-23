@@ -30,6 +30,7 @@ module.exports = function(grunt) {
 		var proxyport = options.proxyport || 8080;
 		var prefix = options.urls;
 		var localPath = options.target;
+		var filter = options.filter || {};
 		if(typeof options.proxyHosts === 'object'){
 			var proxyHosts = options.proxyHosts;
 		} else if(typeof options.proxyHosts === 'string') {
@@ -59,6 +60,17 @@ module.exports = function(grunt) {
 				if(proxyHost){
 					config.host = 'localhost';
 					config.path = prefix + config.path;
+					var alias_path = config.path;
+					for(var i in filter){
+						var regex = new RegExp(i,'i');
+						alias_path = alias_path.replace(regex,filter[i]);
+					}
+					if(alias_path != config.path){
+						console.log(green('alias') + ' ' + yellow(config.path));
+						console.log(green('alias') + ' ' + blue(' => '));
+						console.log(green('alias') + ' ' + yellow(alias_path));
+						config.path = alias_path;
+					}
 				}
 				return config;
 			}

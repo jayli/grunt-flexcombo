@@ -1,7 +1,7 @@
 {
   "name": "grunt-flexcombo",
-  "description": "The best Grunt plugin ever.",
-  "version": "0.1.18",
+  "description": "FlexCombo",
+  "version": "0.1.20",
   "homepage": "",
   "author": {
     "name": "bachi",
@@ -40,6 +40,7 @@
     "gruntplugin"
   ],
   "readmeFilename": "README.md",
-  "_id": "grunt-flexcombo@0.1.15",
-  "_from": "grunt-flexcombo@"
+  "_id": "grunt-flexcombo@0.1.19",
+  "_from": "grunt-flexcombo@",
+  "readme": "# grunt-flexcombo\n\n![](http://gtms01.alicdn.com/tps/i1/T1TgNqFB0bXXbX25fJ-346-77.png)\n\n[flex-combo](https://npmjs.org/package/flex-combo)的grunt插件版本，[Grunt-Flexcombo 原理](https://speakerdeck.com/lijing00333/grunt-flexcombo)。\n\n## Getting Started\n\n依赖 Grunt 版本`~0.4.1`\n\n安装grunt-flexcombo\n\n```shell\nnpm install grunt-flexcombo --save-dev\n```\n\n安装后，在Gruntfile.js中载入任务\n\n```js\ngrunt.loadNpmTasks('grunt-flexcombo');\n```\n\n## \"flexcombo\" 任务配置\n\n### 步骤\n\n在`grunt.initConfig()`中添加flexcombo的配置：\n\n```js\ngrunt.initConfig({\n\tflexcombo:{\n\t\tmain:{\n\t\t\toptions: {\n\t\t\t\ttarget:'src',\n\t\t\t\turls:'/group/project',\n\t\t\t\tport:'80',// flexcombo服务\n\t\t\t\tproxyport:'8080',// 反向代理服务 \n\t\t\t\tservlet:'?',//开启combo的字符串\n\t\t\t\tseparator:',',//多文件分隔符\n\t\t\t\tcharset:'utf8',//默认输出文件的编码\n\t\t\t\tproxyHosts:['a.com','b.com'],//本地服务的域名\n\t\t\t\t// 过滤参数\n\t\t\t\tfilter:{ \n\t\t\t\t\t'-min\\\\.js':'.js'\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n});\n```\noptions的更多配置请参照[flex-combo](https://npmjs.org/package/flex-combo)。\n\nflexcombo将在本地启动两个服务\n\n![](http://gtms01.alicdn.com/tps/i1/T1.ey8FnleXXcxFyEb-523-342.png)\n\n启动服务后，可以直接通过`localhost`来预览本地文件\n\n\thttp://localhost/group/project\n\n若要模拟真实环境调试，两种方法（二者取其一）：\n\n1. 将cdn配向开发机`127.0.0.1 g.tbcdn.cn a.tbcdn.cn`\n1. 将浏览器或者设备HTTP代理配置到本机的反向代理服务的端口\n\n比如在手机终端设置代理方法：\n\n![](http://gtms01.alicdn.com/tps/i1/T1bePRFlVXXXXhb4nD-502-341.png)\n\n## 说明\n\n该服务添加了[jayli-server](https://npmjs.org/package/jayli-server)，支持标准格式的 SSI include\n\n\t<!--#include path=\"asdf.html\" -->\n\n## 使用案例1\n\n[KISSY 组件如何调试线上代码](http://blog.kissyui.com/2013/11/29/%E5%A6%82%E4%BD%95%E5%BF%AB%E9%80%9F%E5%9C%A8%E7%BA%BF%E8%B0%83%E5%BC%8F%E4%BD%A0%E7%9A%84gallery%E7%BB%84%E4%BB%B6/)\n\n## 使用案例2\n\nKISSY项目构建工具和本地环境：[generator-clam](https://npmjs.org/package/generator-clam)一同使用，构建工具生成本地配置文件，形如：\n\n\tflexcombo:{\n\t\toptions: {\n\t\t\ttarget:'src',\n\t\t\turls:'/<%= pkg.group %>/<%= pkg.name %>',\n\t\t\tport:'<%= port %>',\n\t\t\tservlet:'?',\n\t\t\tseparator:',',\n\t\t\tcharset:'utf8'\n\t\t},\n\t\tmain:{}\n\t}\n\n执行任务\n\n\ttask.run(['flexcombo']);\n"
 }

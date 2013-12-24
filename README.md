@@ -50,7 +50,7 @@ grunt.initConfig({
 	// flexcombo 需要配合 watch 模块一起使用
 	watch: {
 		'all': {
-			files: ['src/**/*],
+			files: ['src/**/*'],
 			tasks: [ 'your-build-target' ]
 		}
 	}

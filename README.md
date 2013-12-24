@@ -216,6 +216,3 @@ KISSY项目构建工具和本地环境：[generator-clam](https://npmjs.org/pack
 		}
 	}
 
-执行任务
-
-	task.run(['flexcombo']);

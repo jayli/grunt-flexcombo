@@ -101,6 +101,50 @@ author: @拔赤、@陶清
 
 	<!--#include path="../src/file-path.html" -->
 
+### 3.Mork 数据模拟
+
+服务支持[juicer模板](http://juicer.name)渲染输出，因此在源html中可以直接用juicer语法来写页面，比如源文件:
+
+	<html>
+	<body>
+		<!-- 定义Mock数据 -->
+		<!--#def
+			{"list": [
+					{"name":" guokai", "show": true},
+					{"name":" benben", "show": false},
+					{"name":" dierbaby", "show": true}
+				]}
+		-->
+		<ul>
+			{@each list as it,index}
+				<li>${it.name} (index: ${index})</li>
+			{@/each}
+		</ul>
+	</body>
+	</html>
+
+开启服务后浏览器中访问它，将输出：
+
+	<html>
+		<body>
+			<!-- 定义Mock数据 -->
+			<!--#def {"list": [ {"name":" guokai", "show": true}, 
+			{"name":" benben","show": false}, 
+			{"name":" dierbaby", "show": true} ]} -->
+			<ul>
+				<li>guokai (index: 0)</li>
+				<li>benben (index: 1)</li>
+				<li>dierbaby (index: 2)</li>
+			</ul>
+		</body>
+	</html>
+
+即，数据和juicer模板混合输出了正确的结果。
+
+如果源文件中存在Mock数据字段`<!--#def ... -->`，则服务将会解析文件中的juicer模板
+
+> 这个功能主要提供了调试的渠道，写demo时就直接生成了juicer模板，通过[grunt-combohtml](https://github.com/jayli/grunt-combohtml)（另行配置）可以将juicer语法的源文件编译为velocity语法和php语法。
+
 ## 配置参数说明
 
 #### options.target

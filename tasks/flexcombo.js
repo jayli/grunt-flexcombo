@@ -50,6 +50,7 @@ module.exports = function(grunt) {
 			map: function (config) {
 				if(/[ag]\.tbcdn\.cn/i.test(config.host)){
 					config.host = 'localhost';
+					config.port = port;
 				}
 				var proxyHost = false;
 				proxyHosts.forEach(function(v,k){

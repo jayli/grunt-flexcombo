@@ -1,7 +1,6 @@
 /**
  * grunt-flexcombo
  * 
- *
  * Copyright (c) 2013 拔赤
  * Licensed under the MIT license.
  */
@@ -59,6 +58,7 @@ module.exports = function(grunt) {
 					}
 				});
 				if(proxyHost){
+					config.port = port;
 					config.host = 'localhost';
 					config.path = prefix + config.path;
 					var alias_path = config.path;

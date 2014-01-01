@@ -114,11 +114,12 @@ module.exports = function(grunt) {
 				}
 			});
 		}).listen(port);
-		console.log('\nPreview: ' + green('http://localhost'+prefix+'/'));
+		console.log('\nPreview: ' + green('http://g.tbcdn.cn'+prefix+'/'));
+		showProxyHosts(proxyHosts);
 		console.log('\nFlex Combo Server running at '+blue('http://127.0.0.1:'+port));
 		console.log('Reverse-Proxy running at '+blue('http://127.0.0.1:'+proxyport));
 		console.log('\nYou Can:');
-		console.log('  Host: 127.0.0.1 '+green('a.tbcdn.cn')+' '+green('g.tbcdn.cn'));
+		console.log('  Change Your Hosts file: 127.0.0.1 '+green('a.tbcdn.cn')+' '+green('g.tbcdn.cn'));
 		console.log(yellow('OR'));
 		console.log('  Configure Browser HTTP Proxy or Mobi Device HTTP Proxy: '+green('IP:'+proxyport));
 		console.log('\nHelp: '+ blue('https://npmjs.org/grunt-flexcombo'));
@@ -126,6 +127,14 @@ module.exports = function(grunt) {
 
 };
 
+function showProxyHosts(proxyHosts){
+	if(typeof proxyHosts != 'object'){
+		return;
+	}
+	for(var i = 0;i< proxyHosts.length;i++){
+		console.log('Preview: '+green('http://'+proxyHosts[i] + '/'));
+	}
+}
 
 function consoleColor(str,num){
 	if (!num) {

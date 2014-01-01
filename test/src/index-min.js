@@ -1,0 +1,1 @@
+KISSY.add("b",function(){return{}},{requires:["io"]});

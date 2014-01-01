@@ -1,0 +1,1 @@
+KISSY.add("a",function(){"use strict";return{}},{requires:["node","json","event"]});

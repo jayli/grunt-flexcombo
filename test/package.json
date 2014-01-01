@@ -1,0 +1,11 @@
+{
+"name": "slide",
+"version": "1.2.0",
+"devDependencies": {
+    "grunt": "~0.4.1",
+	"grunt-flexcombo":"",
+    "grunt-contrib-uglify": "~0.2.0",
+	"grunt-contrib-watch": "",
+}
+}
+

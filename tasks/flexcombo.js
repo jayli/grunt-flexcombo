@@ -47,7 +47,7 @@ module.exports = function(grunt) {
 		proxy.createServer({
 			port: proxyport,
 			map: function (config) {
-				if(/[ag]\.tbcdn\.cn/i.test(config.host)){
+				if(/([ag]\.tbcdn\.cn|g.assets.daily.taobao.net)/i.test(config.host)){
 					config.host = 'localhost';
 					config.port = port;
 				}

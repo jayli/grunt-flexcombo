@@ -30,12 +30,11 @@ module.exports = function(grunt) {
 		var prefix = options.urls;
 		var localPath = options.target;
 		var filter = options.filter || {};
+        var proxyHosts = [];
 		if(typeof options.proxyHosts === 'object'){
-			var proxyHosts = options.proxyHosts;
+			proxyHosts = options.proxyHosts;
 		} else if(typeof options.proxyHosts === 'string') {
-			var proxyHosts = [options.proxyHosts];
-		} else {
-			var proxyHosts = [];
+			proxyHosts = [options.proxyHosts];
 		}
 
 		var obj = {};

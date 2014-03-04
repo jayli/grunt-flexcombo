@@ -12,7 +12,9 @@ var http = require('http');
 var flexCombo = require('flex-combo');
 var jayli = require('jayli-server');
 var url = require('url');
-var proxy = require('reverse-proxy');
+//var proxy = require('reverse-proxy');
+// changed by 首作，替换反向代理为o_o
+var proxy = require('o_o');
 
 module.exports = function(grunt) {
 
@@ -43,6 +45,7 @@ module.exports = function(grunt) {
 			obj[i] = path.resolve(pwd,obj[i]);
 		}
 		var comboInst = flexCombo(process.cwd(), obj,options);
+        /*
 		proxy.createServer({
 			port: proxyport,
 			map: function (config) {
@@ -75,6 +78,9 @@ module.exports = function(grunt) {
 				return config;
 			}
 		});
+		*/
+        // @changed by 首作，替换为o_o
+        proxy().listen(proxyport);
 		http.createServer(function (req, res) {
 			comboInst(req, res, function(){
 				// get true path
@@ -114,7 +120,7 @@ module.exports = function(grunt) {
 			});
 		}).listen(port);
 		console.log('\nPreview: ' + green('http://g.tbcdn.cn'+prefix+'/'));
-		showProxyHosts(proxyHosts);
+		//showProxyHosts(proxyHosts);
 		console.log('\nFlex Combo Server running at '+blue('http://127.0.0.1:'+port));
 		console.log('Reverse-Proxy running at '+blue('http://127.0.0.1:'+proxyport));
 		console.log('\nYou Can:');

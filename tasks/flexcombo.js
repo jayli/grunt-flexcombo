@@ -12,9 +12,9 @@ var http = require('http');
 var flexCombo = require('flex-combo');
 var jayli = require('jayli-server');
 var url = require('url');
-//var proxy = require('reverse-proxy');
+var Rproxy = require('reverse-proxy');
 // changed by 首作，替换反向代理为o_o
-var proxy = require('o_o');
+var Oproxy = require('o_o');
 
 module.exports = function(grunt) {
 
@@ -26,6 +26,7 @@ module.exports = function(grunt) {
 		var options = this.options();
 
 		var that = this;
+		var longPolling = options.longPolling;
 		var pwd = process.cwd();
 		var port = options.port || '80';
 		var proxyport = options.proxyport || 8080;
@@ -45,42 +46,44 @@ module.exports = function(grunt) {
 			obj[i] = path.resolve(pwd,obj[i]);
 		}
 		var comboInst = flexCombo(process.cwd(), obj,options);
-        /*
-		proxy.createServer({
-			port: proxyport,
-			map: function (config) {
-				if(/([ag]\.tbcdn\.cn|g.assets.daily.taobao.net)/i.test(config.host)){
-					config.host = 'localhost';
-					config.port = port;
+		if(longPolling === false){
+			Rproxy.createServer({
+				port: proxyport,
+				map: function (config) {
+					// a.tbcdn.cn/g.tbcdn.cn/g.assets./ 的请求将转发至flexcombo端口
+					if(/([ag]\.tbcdn\.cn|g.assets.daily.taobao.net)/i.test(config.host)){
+						config.host = 'localhost';
+						config.port = port;
+					}
+					var proxyHost = false;
+					proxyHosts.forEach(function(v,k){
+						if(config.host.indexOf(v) >= 0){
+							proxyHost = true;
+						}
+					});
+					if(proxyHost){
+						config.port = port;
+						config.host = 'localhost';
+						config.path = prefix + config.path;
+						var alias_path = config.path;
+						for(var i in filter){
+							var regex = new RegExp(i,'i');
+							alias_path = alias_path.replace(regex,filter[i]);
+						}
+						if(alias_path != config.path){
+							console.log(green('alias') + ' ' + yellow(config.path));
+							console.log(green('alias') + ' ' + blue(' => '));
+							console.log(green('alias') + ' ' + yellow(alias_path));
+							config.path = alias_path;
+						}
+					}
+					return config;
 				}
-				var proxyHost = false;
-				proxyHosts.forEach(function(v,k){
-					if(config.host.indexOf(v) >= 0){
-						proxyHost = true;
-					}
-				});
-				if(proxyHost){
-					config.port = port;
-					config.host = 'localhost';
-					config.path = prefix + config.path;
-					var alias_path = config.path;
-					for(var i in filter){
-						var regex = new RegExp(i,'i');
-						alias_path = alias_path.replace(regex,filter[i]);
-					}
-					if(alias_path != config.path){
-						console.log(green('alias') + ' ' + yellow(config.path));
-						console.log(green('alias') + ' ' + blue(' => '));
-						console.log(green('alias') + ' ' + yellow(alias_path));
-						config.path = alias_path;
-					}
-				}
-				return config;
-			}
-		});
-		*/
-        // @changed by 首作，替换为o_o
-        proxy().listen(proxyport);
+			});
+		} else {
+			// @changed by 首作，替换为o_o
+			Oproxy().listen(proxyport);
+		}
 		http.createServer(function (req, res) {
 			comboInst(req, res, function(){
 				// get true path
@@ -98,8 +101,8 @@ module.exports = function(grunt) {
 					r += '<style>' +
 						'p {'+
 						'font-family:Tahoma;'+
-						'font-size:12px;'+
-						'line-height:12px;'+
+						'font-size:1em;'+
+						'line-height:1em;'+
 						'margin:9px 10px'+
 						'}'+
 						'</style>';
@@ -120,7 +123,9 @@ module.exports = function(grunt) {
 			});
 		}).listen(port);
 		console.log('\nPreview: ' + green('http://g.tbcdn.cn'+prefix+'/'));
-		//showProxyHosts(proxyHosts);
+		if(longPolling === false){
+			showProxyHosts(proxyHosts);
+		} 
 		console.log('\nFlex Combo Server running at '+blue('http://127.0.0.1:'+port));
 		console.log('Reverse-Proxy running at '+blue('http://127.0.0.1:'+proxyport));
 		console.log('\nYou Can:');
@@ -175,7 +180,7 @@ function getDirFiles(dir){
 	var files = fs.readdirSync(dir);
 	var res_f = []; 
 	var res_d = [];
-	var r = '';
+	var r = '<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"></head><body>';
 	files.forEach(function(file){
 		var stat = fs.lstatSync(path.resolve(dir,file));
 
@@ -185,7 +190,6 @@ function getDirFiles(dir){
 			res_d.push(file);
 		}   
 	});
-
 	
 	r += '<p><img src="http://img02.taobaocdn.com/tps/i2/T1WNlnFadjXXaSQP_X-16-16.png" /> <a href="../">parent dir</a></p><hr size=1 />';
 
@@ -196,6 +200,8 @@ function getDirFiles(dir){
 	res_f.forEach(function(file){
 		r += '<p><img src="http://img02.taobaocdn.com/tps/i2/T1Y7tPFg8eXXaSQP_X-16-16.png" /> <a href="'+file+'">'+file+'</a></p>';
 	});
+
+	r += '</body></html>';
 
 	return r;
 }

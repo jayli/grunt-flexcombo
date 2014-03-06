@@ -1,7 +1,7 @@
 {
   "name": "grunt-flexcombo",
   "description": "FlexCombo",
-  "version": "0.1.26",
+  "version": "0.1.27",
   "homepage": "",
   "author": {
     "name": "bachi",
@@ -40,5 +40,8 @@
   "keywords": [
     "gruntplugin"
   ],
-  "readmeFilename": "README.md"
+  "readmeFilename": "README.md",
+  "readme": "",
+  "_id": "grunt-flexcombo@0.1.26",
+  "_from": "grunt-flexcombo@"
 }

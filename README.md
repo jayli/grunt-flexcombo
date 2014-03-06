@@ -28,6 +28,7 @@ author: @拔赤、@陶清
 		flexcombo:{
 			debug:{
 				options: {
+					longPolling:false, // 是否支持长连接
 					target:'src',
 					urls:'/group/project',// 匹配[ag].tbcdn.cn时的访问路径
 					port:'80',// flexcombo服务端口
@@ -35,7 +36,7 @@ author: @拔赤、@陶清
 					servlet:'?',//开启combo的字符串
 					separator:',',//多文件分隔符
 					charset:'utf8',//默认输出文件的编码
-					proxyHosts:['a.com','b.com'],//本地服务的域名
+					proxyHosts:['a.com','b.com','demo.com'],//本地服务的域名
 					// 过滤参数
 					filter:{ 
 						'-min\\.js':'.js',
@@ -76,18 +77,26 @@ author: @拔赤、@陶清
 
 上例中`sudo grunt debug`将会调用flexcombo服务，会在本地启动两个服务，两个服务分属两个端口`proxyport`（反向代理服务）和`port`（CDN 环境服务）
 
-![](http://gtms01.alicdn.com/tps/i1/T1.ey8FnleXXcxFyEb-523-342.png)
+![](http://gtms01.alicdn.com/tps/i1/T1xHe5FABbXXbRj_sG-542-385.png)
 
 启动服务后，可以直接通过`localhost`或者IP来预览本地文件
 
 	http://localhost/group/project
 
+也可以通过`proxyHosts`中的域名配置来访问：
+
+	http://demo.com/
+
 若要模拟真实环境调试，两种方法（二者取其一），推荐第二种：
 
-1. 将cdn配向本机`127.0.0.1 g.tbcdn.cn a.tbcdn.cn`
+1. <del>将cdn配向本机`127.0.0.1 g.tbcdn.cn a.tbcdn.cn`</del>
 1. 将浏览器或者设备HTTP代理配置到本机的反向代理服务的端口
 
-比如在手机终端设置代理方法：
+在Firefox中设置代理：
+
+![](http://gtms01.alicdn.com/tps/i1/T1KzNFFrxbXXcrSyrN-372-175.png)
+
+在手机终端设置代理方法：
 
 ![](http://gtms01.alicdn.com/tps/i1/T1bePRFlVXXXXhb4nD-502-341.png)
 
@@ -146,6 +155,13 @@ author: @拔赤、@陶清
 > 这个功能主要提供了调试的渠道，写demo时就直接生成了juicer模板，通过[grunt-combohtml](https://github.com/jayli/grunt-combohtml)（另行配置）可以将juicer语法的源文件编译为velocity语法和php语法。
 
 ## 配置参数说明
+
+#### options.longPolling
+
+- 类型：Boolean
+- 默认值：false
+
+是否采用长连接模式
 
 #### options.target
 

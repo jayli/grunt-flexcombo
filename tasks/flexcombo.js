@@ -26,7 +26,7 @@ module.exports = function(grunt) {
 		var options = this.options();
 
 		var that = this;
-		var longPolling = options.longPolling;
+		var longPolling = options.longPolling || false;
 		var pwd = process.cwd();
 		var port = options.port || '80';
 		var proxyport = options.proxyport || 8080;

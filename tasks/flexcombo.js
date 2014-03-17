@@ -121,7 +121,19 @@ module.exports = function(grunt) {
 					res.end("Error 404: "+req.url);
 				}
 			});
-		}).listen(port);
+		}).listen(port, function () {
+                // 从sudo降权，避免watch build后的文件为root权限
+                if(process.setgid && process.setuid){
+
+                    var env = process.env,
+                        uid = parseInt(env['SUDO_UID'] || process.getuid(), 10),
+                        gid = parseInt(env['SUDO_GID'] || process.getgid(), 10);
+
+                    process.setgid(gid);
+                    process.setuid(uid);
+
+                }
+            });
 		console.log('\nPreview: ' + green('http://g.tbcdn.cn'+prefix+'/'));
 		if(longPolling === false){
 			showProxyHosts(proxyHosts);

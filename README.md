@@ -26,6 +26,17 @@ author: @拔赤、@陶清
 
 	grunt.initConfig({
 		flexcombo:{
+            server:{
+                options:{
+                    target:'src/',
+                    urls:'/<%= pkg.group %>/<%= pkg.name %>',
+                    port:'<%= pkg.port %>',
+                    mockPath: '<%= pkg.mockPath %>',//指定本地mock的目录（路径）名，默认为"mock"
+                    servlet:'?',
+                    separator:',',
+                    charset:'utf8'
+                }
+            },
 			debug:{
 				options: {
 					longPolling:false, // 是否支持长连接
@@ -254,6 +265,13 @@ Combo的url中多个文件的分隔符。
 允许在大多数情况下返回字符集为utf-8字符集的资源。但在访问/apps/aaa.js的情况下，以gbk的方式编码。 这个特性多被用来引入编码几不同的第三方脚本。
 
 options的更多配置继承自flexcombo，请参照[flex-combo](https://npmjs.org/package/flex-combo)。
+
+#### options.mockPath
+
+- 类型：String
+- 默认值：'mock'
+
+本地 json(p) mock 服务脚本所在目录名（拼接到mock请求路径中），对于匹配的路径请求根据 mock 服务脚本返回值构建 json(p) 接口返回。
 
 ## 案例
 

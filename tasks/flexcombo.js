@@ -16,6 +16,11 @@ var Rproxy = require('reverse-proxy');
 // changed by 首作，替换反向代理为o_o
 var Oproxy = require('o_o');
 
+// mock用到的库
+var formidable = require('formidable');
+var Mocker = require('mockjs');
+var _ = require('underscore');
+
 module.exports = function(grunt) {
 
 	// Please see the Grunt documentation for more information regarding task
@@ -33,6 +38,8 @@ module.exports = function(grunt) {
 		var prefix = options.urls;
 		var localPath = options.target;
 		var filter = options.filter || {};
+        var mockPath = options.mockPath || 'mock';
+        var mockPathReg = new RegExp("^\\/" + mockPath + "\\/");
         var proxyHosts = [];
 		if(typeof options.proxyHosts === 'object'){
 			proxyHosts = options.proxyHosts;
@@ -50,34 +57,40 @@ module.exports = function(grunt) {
 			Rproxy.createServer({
 				port: proxyport,
 				map: function (config) {
-					// a.tbcdn.cn/g.tbcdn.cn/g.assets./ 的请求将转发至flexcombo端口
-					if(/([ag]\.tbcdn\.cn|g.assets.daily.taobao.net)/i.test(config.host)){
-						config.host = 'localhost';
-						config.port = port;
-					}
-					var proxyHost = false;
-					proxyHosts.forEach(function(v,k){
-						if(config.host.indexOf(v) >= 0){
-							proxyHost = true;
-						}
-					});
-					if(proxyHost){
-						config.port = port;
-						config.host = 'localhost';
-						config.path = prefix + config.path;
-						var alias_path = config.path;
-						for(var i in filter){
-							var regex = new RegExp(i,'i');
-							alias_path = alias_path.replace(regex,filter[i]);
-						}
-						if(alias_path != config.path){
-							console.log(green('alias') + ' ' + yellow(config.path));
-							console.log(green('alias') + ' ' + blue(' => '));
-							console.log(green('alias') + ' ' + yellow(alias_path));
-							config.path = alias_path;
-						}
-					}
-					return config;
+                    // 过滤指定了前缀的请求
+                    if(!prefix || (prefix && (config.path.indexOf(prefix) == -1))){
+                        // 未指定前缀或是不匹配前缀，直接pass
+                    }else{
+                        // a.tbcdn.cn/g.tbcdn.cn/g.assets./ 的请求将转发至flexcombo端口
+                        if(/([ag]\.tbcdn\.cn|g.assets.daily.taobao.net)/i.test(config.host)){
+                            config.host = 'localhost';
+                            config.port = port;
+                        }
+                        var proxyHost = false;
+                        proxyHosts.forEach(function(v,k){
+                            if(config.host.indexOf(v) >= 0){
+                                proxyHost = true;
+                            }
+                        });
+                        if(proxyHost){
+                            config.port = port;
+                            config.host = 'localhost';
+                            config.path = prefix + config.path;
+                            var alias_path = config.path;
+                            for(var i in filter){
+                                var regex = new RegExp(i,'i');
+                                alias_path = alias_path.replace(regex,filter[i]);
+                            }
+                            if(alias_path != config.path){
+                                console.log(green('alias') + ' ' + yellow(config.path));
+                                console.log(green('alias') + ' ' + blue(' => '));
+                                console.log(green('alias') + ' ' + yellow(alias_path));
+                                config.path = alias_path;
+                            }
+                        }
+                    }
+
+                    return config;
 				}
 			});
 		} else {
@@ -115,7 +128,85 @@ module.exports = function(grunt) {
 						.after(function(statCode) {
 							log(statCode, req.url);
 						});
-				} else {
+				} else if(mockPathReg.test(truePath)){
+
+                    // 响应mock请求
+                    var requirePath = pwd + truePath,
+                        requireMod,
+                        utilLibs = {
+                            mocker: Mocker,
+                            _: _
+                        };
+
+                    // 加载mock模块
+                    try{
+
+                        requireMod = require(requirePath);
+
+                    }catch(e) {
+
+                        log(404, req.url, 'Mock Interface not found');
+                        res.writeHead(404, {'Content-Type': 'text/plain'});
+                        res.end("Error 404: " +req.url + '::mock interface not found!');
+                    }
+
+                    /**
+                     * mock返回结果的回调处理
+                     * @param cbName {String} callback参数名，处理jsonp请求
+                     * @param result {Object} mock 结果
+                     */
+                    var callbackFn = function(cbName, result){
+
+                        result = JSON.stringify(result, null, 4);
+
+                        if(cbName){
+                            result = cbName + '(' + result + ')';
+                            res.writeHead(200, {'Content-Type': 'text/plain'});
+                        }else{
+                            res.writeHead(200, {'Content-Type': 'application/json'});
+                        }
+
+                        res.end(result);
+
+                        log(200, req.url, green('::mock result -> ' + result));
+                    };
+
+                    switch (req.method){
+
+                        case 'GET':
+
+                            var params = url.parse(req.url, true).query;
+                            callbackFn(params.callback, requireMod(req, params, utilLibs));
+
+                            break;
+
+                        case 'POST':
+
+                            var form = new formidable.IncomingForm();
+
+                            form.parse(req, function(err, fields, files) {
+
+                                if(err){
+
+                                    res.writeHead(500, {'Content-Type': 'text/plain'});
+                                    res.end("Error 500: " + error + '::form parse in mock interface failed!');
+                                    return false;
+                                }
+
+                                fields.files = files;
+                                callbackFn(fields.callback, requireMod(req, fields, utilLibs));
+
+                                return true;
+
+                            });
+
+                            break;
+
+                        default :
+                            break;
+                    }
+
+                } else {
 					log(404, req.url, 'Not found');
 					res.writeHead(404, {'Content-Type': 'text/plain'});
 					res.end("Error 404: "+req.url);

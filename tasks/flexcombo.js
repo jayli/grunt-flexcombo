@@ -59,7 +59,8 @@ module.exports = function(grunt) {
 				map: function (config) {
                     // 过滤指定了前缀的请求
 					var tpath = config.path.replace('??','');
-                    if((!prefix || (prefix && (tpath.indexOf(prefix) == -1)))
+					var tprefix = prefix.replace(/^\//,'');
+                    if((!prefix || (prefix && (tpath.indexOf(tprefix) == -1)))
 							&& !(config.host && inArray(config.host,proxyHosts))
 						){
                         // 未指定前缀或是不匹配前缀,且不是proxyHost请求，直接pass

@@ -58,8 +58,10 @@ module.exports = function(grunt) {
 				port: proxyport,
 				map: function (config) {
                     // 过滤指定了前缀的请求
-                    if(!prefix || (prefix && (config.path.indexOf(prefix) == -1))){
-                        // 未指定前缀或是不匹配前缀，直接pass
+                    if((!prefix || (prefix && (config.path.indexOf(prefix) == -1)))
+							&& !(config.host && inArray(config.host,proxyHosts))
+						){
+                        // 未指定前缀或是不匹配前缀,且不是proxyHost请求，直接pass
                     }else{
                         // a.tbcdn.cn/g.tbcdn.cn/g.assets./ 的请求将转发至flexcombo端口
                         if(/([ag]\.tbcdn\.cn|g.assets.daily.taobao.net)/i.test(config.host)){
@@ -326,3 +328,16 @@ function isFile(dir){
 		return false;
 	}
 }
+
+
+
+function inArray(val,arr){  
+	var flag =false;
+	for(var i = 0 ;i<arr.length;i++){
+		if(arr[i]===val){
+			flag = true;
+		}
+	}
+	return flag;
+}  
+

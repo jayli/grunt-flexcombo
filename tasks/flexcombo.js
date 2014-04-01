@@ -104,12 +104,12 @@ module.exports = function(grunt) {
 		http.createServer(function (req, res) {
 			comboInst(req, res, function(){
 				// get true path
-                var reqPath = req.url;
-				var truePath = path.resolve(pwd , localPath,reqPath.replace('http://'+req.headers.host,'').replace(prefix,'.'));
+                var parsedReqUrl = url.parse(req.url, true);
+				var truePath = path.resolve(pwd , localPath,req.url.replace('http://'+req.headers.host,'').replace(prefix,'.'));
 				truePath = truePath.replace(/\?.*$/,'');
 				truePath = truePath.replace(/#.*$/,'').replace('http:/'+req.headers.host,'');
 				if(isDir(truePath)){
-					if(!/\/$/.test(reqPath)){
+					if(!/\/$/.test(req.url)){
 						res.writeHead(302, {'Content-Type': 'text/html'});
 						res.end('<script>window.location.href += "/";</script>');
 						return;
@@ -131,12 +131,12 @@ module.exports = function(grunt) {
 						.before(function() {
 						})
 						.after(function(statCode) {
-							log(statCode, reqPath);
+							log(statCode, req.url);
 						});
-				} else if(mockPathReg.test(reqPath)){
+				} else if(mockPathReg.test(parsedReqUrl.pathname)){
 
                     // 响应mock请求
-                    var requirePath = pwd + reqPath,
+                    var requirePath = pwd + parsedReqUrl.pathname,
                         requireMod,
                         utilLibs = {
                             mocker: Mocker,
@@ -150,9 +150,9 @@ module.exports = function(grunt) {
 
                     }catch(e) {
 
-                        log(404, reqPath, 'Mock Interface not found');
+                        log(404, req.url, 'Mock Interface not found');
                         res.writeHead(404, {'Content-Type': 'text/plain'});
-                        res.end("Error 404: " + reqPath + '::mock interface not found!');
+                        res.end("Error 404: " + req.url + '::mock interface not found!');
                     }
 
                     /**
@@ -173,14 +173,14 @@ module.exports = function(grunt) {
 
                         res.end(result);
 
-                        log(200, reqPath, green('::mock result -> ' + result));
+                        log(200, req.url, green('::mock result -> ' + result));
                     };
 
                     switch (req.method){
 
                         case 'GET':
 
-                            var params = url.parse(reqPath, true).query;
+                            var params = parsedReqUrl.query;
                             callbackFn(params.callback, requireMod(req, params, utilLibs));
 
                             break;
@@ -212,9 +212,9 @@ module.exports = function(grunt) {
                     }
 
                 } else {
-					log(404, reqPath, 'Not found');
+					log(404, req.url, 'Not found');
 					res.writeHead(404, {'Content-Type': 'text/plain'});
-					res.end("Error 404: " + reqPath);
+					res.end("Error 404: "+req.url);
 				}
 			});
 		}).listen(port, function () {

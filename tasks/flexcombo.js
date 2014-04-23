@@ -271,7 +271,7 @@ module.exports = function (grunt) {
         console.log('\nHelp: ' + blue('https://npmjs.org/grunt-flexcombo'));
 
         // 在 server 目标下打开系统浏览器
-        if (that.target == 'server') {
+        if (that.target == 'server' && !!grunt.option('browser')) {
             open('http://localhost' + prefix + '/');
         }
     });

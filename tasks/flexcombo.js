@@ -5,7 +5,6 @@
  * Licensed under the MIT license.
  */
 
-var util = require('util');
 var fs = require('fs');
 var path = require('path');
 var http = require('http');
@@ -70,7 +69,7 @@ module.exports = function (grunt) {
         if (longPolling === false) {
             Rproxy.createServer({
                 port: proxyport,
-                map: function (config) {
+                map: function (config, req, res) {
                     // 过滤指定了前缀的请求
                     var tpath = config.path.replace('??', '');
                     var tprefix = prefix.replace(/^\//, '');
@@ -271,7 +270,7 @@ module.exports = function (grunt) {
         console.log('\nHelp: ' + blue('https://npmjs.org/grunt-flexcombo'));
 
         // 在 server 目标下打开系统浏览器
-        if (that.target == 'server' && !!grunt.option('browser')) {
+        if (that.target == 'server' && !!grunt.option('br')) {
             open('http://localhost' + prefix + '/');
         }
     });

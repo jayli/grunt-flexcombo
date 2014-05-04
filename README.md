@@ -121,7 +121,11 @@ author: @拔赤、@陶清
 
 	<!--#include path="../src/file-path.html" -->
 
-### 3.Mork 数据模拟
+### 3. AWP 中的标签替换
+
+目前只支持`<!--HTTP:url,utf8:HTTP-->`的解析，其他类型暂时不支持，这个规则不会被[combohtml](https://www.npmjs.org/package/grunt-combohtml)解析
+
+### 4.Mork 数据模拟
 
 服务支持[juicer模板](http://juicer.name)渲染输出，因此在源html中可以直接用juicer语法来写页面，比如源文件:
 

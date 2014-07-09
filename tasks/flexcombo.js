@@ -42,7 +42,7 @@ module.exports = function (grunt) {
         var localPath = options.target;
         var filter = options.filter || {};
         var mockPath = options.mockPath || 'mock';
-        var mockPathReg = new RegExp("^\\/" + "(" + prefix + "/)?" + mockPath + "\\/");
+        var mockPathReg = new RegExp("^\\/" + mockPath + "\\/");
         var proxyHosts = [];
         if (typeof options.proxyHosts === 'object') {
             proxyHosts = options.proxyHosts;
@@ -130,6 +130,7 @@ module.exports = function (grunt) {
                 var truePath = path.resolve(pwd, localPath, req.url.replace('http://' + req.headers.host, '').replace(prefix, '.'));
                 truePath = truePath.replace(/\?.*$/, '');
                 truePath = truePath.replace(/#.*$/, '').replace('http:/' + req.headers.host, '');
+	            var removedPrefixPath = parsedReqUrl.pathname.replace(prefix, '');
                 if (isDir(truePath)) {
                     if (!/\/$/.test(req.url)) {
                         res.writeHead(302, {'Content-Type': 'text/html'});
@@ -156,10 +157,10 @@ module.exports = function (grunt) {
                             log(statCode, req.url);
                             return fileBuffer;
                         });
-                } else if (mockPathReg.test(parsedReqUrl.pathname)) {
+                } else if (mockPathReg.test(removedPrefixPath)) {
 
                     // 响应mock请求
-                    var requirePath = pwd + parsedReqUrl.pathname,
+                    var requirePath = pwd + removedPrefixPath,
                         requireMod,
                         utilLibs = {
                             mocker: Mocker,

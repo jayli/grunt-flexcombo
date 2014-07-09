@@ -42,7 +42,7 @@ module.exports = function (grunt) {
         var localPath = options.target;
         var filter = options.filter || {};
         var mockPath = options.mockPath || 'mock';
-        var mockPathReg = new RegExp("^\\/" + mockPath + "\\/");
+        var mockPathReg = new RegExp("^\\/" + "(" + prefix + "/)?" + mockPath + "\\/");
         var proxyHosts = [];
         if (typeof options.proxyHosts === 'object') {
             proxyHosts = options.proxyHosts;
@@ -152,8 +152,9 @@ module.exports = function (grunt) {
                         .deliver('.', req, res, truePath)
                         .before(function () {
                         })
-                        .after(function (statCode) {
+                        .after(function (statCode, filePath, fileBuffer, encoding) {
                             log(statCode, req.url);
+                            return fileBuffer;
                         });
                 } else if (mockPathReg.test(parsedReqUrl.pathname)) {
 
@@ -366,12 +367,6 @@ function isFile(dir) {
 
 
 function inArray(val, arr) {
-    var flag = false;
-    for (var i = 0; i < arr.length; i++) {
-        if (arr[i] === val) {
-            flag = true;
-        }
-    }
-    return flag;
+    return (arr.indexOf(val) > -1);
 }  
 

@@ -160,7 +160,7 @@ module.exports = function (grunt) {
                 } else if (mockPathReg.test(removedPrefixPath)) {
 
                     // 响应mock请求
-                    var requirePath = pwd + removedPrefixPath,
+	                var requirePath = (pwd + removedPrefixPath).replace(/\.(\w)*$/, ''),    // 移除结尾的 ".do(action)"
                         requireMod,
                         utilLibs = {
                             mocker: Mocker,
@@ -268,13 +268,14 @@ module.exports = function (grunt) {
         console.log('\nYou Can:');
         console.log('  Change Your Hosts file: 127.0.0.1 ' + green('a.tbcdn.cn') + ' ' + green('g.tbcdn.cn'));
         console.log(yellow('OR'));
-        console.log('  Configure Browser HTTP Proxy or Mobi Device HTTP Proxy: ' + green('IP:' + proxyport));
+	    var localIpAddr = getLocalIp();
+	    console.log('  Configure Browser HTTP Proxy or Mobi Device HTTP Proxy: ' + green((localIpAddr ? localIpAddr : 'IP') + ':' + proxyport));
         console.log('\nHelp: ' + blue('https://npmjs.org/grunt-flexcombo'));
 
-        // 在 server 目标下打开系统浏览器
-        if (that.target == 'server' && !!grunt.option('br')) {
-            open('http://localhost' + prefix + '/');
-        }
+	    // 在 server 目标下打开系统浏览器
+	    if ((that.target == 'server' || that.target == 'demo') && !!grunt.option('br') && proxyHosts[0]) {
+		    open('http://' + proxyHosts[0] + ':' + port + '/');
+	    }
     });
 
 };
@@ -369,5 +370,22 @@ function isFile(dir) {
 
 function inArray(val, arr) {
     return (arr.indexOf(val) > -1);
-}  
+}
 
+
+function getLocalIp() {
+	var ifaces = os.networkInterfaces();
+	var lookupIpAddress = null;
+	for (var dev in ifaces) {
+		if (dev != "en1" && dev != "en0") {
+			continue;
+		}
+		ifaces[dev].forEach(function (details) {
+			if (details.family == 'IPv4') {
+				lookupIpAddress = details.address;
+				return;
+			}
+		});
+	}
+	return lookupIpAddress;
+}

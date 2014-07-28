@@ -12,3 +12,6 @@
 - [!] 启动日志显示本机 IP，方便 debug
 - [!] mock 路径去除结尾的 ".do/action" 等，现在可以方便地 mock mtop 接口请求了
 - [!] `demo`/`server` 模式下通过后缀 `--br` 自动打开浏览器优化
+
+### 0.1.43
+- [!] bugfix for `getLocalIp()`

@@ -8,6 +8,7 @@
 var fs = require('fs');
 var path = require('path');
 var http = require('http');
+var os = require('os');
 var flexCombo = require('flex-combo');
 var jayli = require('jayli-server');
 var url = require('url');

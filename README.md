@@ -48,6 +48,17 @@ author: @拔赤、@陶清
 					separator:',',//多文件分隔符
 					charset:'utf8',//默认输出文件的编码
 					proxyHosts:['a.com','b.com','demo.com'],//本地服务的域名
+					// 代理配置
+					proxy: {
+						interface: {		// 接口 mock 配置
+							hosts: ['api.m.taobao.com', 'api.waptest.taobao.com', 'api.test.taobao.com'],// 要代理的接口域名
+							script: 'proxy/interface.js'// 代理脚本路径
+						},
+						webpage: {			// 页面 HTML 区块代理配置
+							urls: [/taobao\.com/],//[/www\.baidu\.com/, /taobao\.com/],		// 要代理的页面路径匹配规则（字符串或正则表达式）
+							script: 'proxy/webpage.js'	// 代理脚本路径
+						}
+					},
 					// 过滤参数
 					filter:{ 
 						'-min\\.js':'.js',

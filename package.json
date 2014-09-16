@@ -1,7 +1,7 @@
 {
   "name": "grunt-flexcombo",
   "description": "FlexCombo",
-  "version": "0.1.44",
+  "version": "0.2.0",
   "homepage": "",
   "author": {
     "name": "bachi",
@@ -29,14 +29,16 @@
     "jayli-server": ""
   },
   "dependencies": {
-    "flex-combo": "0.5.7",
+    "anyproxy": "^2.4.2",
+    "cheerio": "^0.17.0",
+    "dns-sync": "^0.1.0",
+    "flex-combo": "^0.5.14",
     "formidable": "^1.0.14",
-    "html-proxy": "",
-    "jayli-server": "",
+    "iconv-lite": "^0.4.4",
+    "jayli-server": "0.0.18",
     "mockjs": "^0.1.1",
-    "o_o": "0.0.1",
     "open": "0.0.5",
-    "reverse-proxy": "~0.3.0",
+    "shelljs": "^0.3.0",
     "underscore": "^1.6.0"
   },
   "peerDependencies": {

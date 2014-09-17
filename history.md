@@ -15,3 +15,14 @@
 
 ### 0.1.43
 - [!] bugfix for `getLocalIp()`
+
+### 0.2.0
+- [!] 替换 reverse-proxy 为 [anyproxy](web.npm.alibaba-inc.com/package/anyproxy)
+- [+] 增加 weinre 支持
+
+### 0.2.1
+- [!] 移除 `open` 支持，加入 weinre 安装检测
+- [!] 移除 `--br` 打开浏览器功能
+
+### 0.2.2
+- [!] 移除遗留的 `grunt` 模块依赖（`grunt`依赖模块众多导致安装慢）

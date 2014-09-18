@@ -1,7 +1,7 @@
 {
   "name": "grunt-flexcombo",
   "description": "FlexCombo",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "homepage": "",
   "author": {
     "name": "bachi",
@@ -29,7 +29,7 @@
     "jayli-server": ""
   },
   "dependencies": {
-    "anyproxy": "^2.4.2",
+    "anyproxy": "^2.4.3",
     "cheerio": "^0.17.0",
     "dns-sync": "^0.1.0",
     "flex-combo": "^0.5.14",

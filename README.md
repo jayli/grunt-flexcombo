@@ -39,7 +39,6 @@ author: @拔赤、@陶清
             },
 			debug:{
 				options: {
-					longPolling:false, // 是否支持长连接
 					target:'src',
 					urls:'/group/project',// 匹配[ag].tbcdn.cn时的访问路径
 					port:'80',// flexcombo服务端口
@@ -48,6 +47,8 @@ author: @拔赤、@陶清
 					separator:',',//多文件分隔符
 					charset:'utf8',//默认输出文件的编码
 					proxyHosts:['a.com','b.com','demo.com'],//本地服务的域名
+					startWeinre: false,		// 是否自动调用 weinre, H5 项目可选
+					weinrePort: 8091,		// 默认的 weinre 运行端口
 					// 代理配置
 					proxy: {
 						interface: {		// 接口 mock 配置
@@ -59,6 +60,10 @@ author: @拔赤、@陶清
 							script: 'proxy/webpage.js'	// 代理脚本路径
 						}
 					},
+					webConfigPort: 8082,	// anyproxy web config 页面端口
+					webPort: 8002,			// anyproxy 监控页面端口
+					socketPort: 8003		// anyproxy 控制台与监控页面通信端口
+					
 					// 过滤参数
 					filter:{ 
 						'-min\\.js':'.js',
@@ -317,3 +322,9 @@ KISSY项目构建工具和本地环境：[generator-clam](https://npmjs.org/pack
 		}
 	}
 
+## Thanks
+
+- <a href="https://www.npmjs.org/package/anyproxy"><img alt="Any Proxy" width="60" src="https://i.alipayobjects.com/i/ecmng/png/201409/3NKRCRk2Uf.png_250x.png"/></a>
+- <a href="http://people.apache.org/~pmuellr/weinre-docs/latest/"><img alt="weinre" width="60" src="http://gtms03.alicdn.com/tps/i3/TB1fODZGXXXXXcHXpXXTyVt9VXX-128-128.png"/></a>
+- [flex-combo](https://www.npmjs.org/package/flex-combo)
+- [jayli-server](https://www.npmjs.org/package/jayli-server)

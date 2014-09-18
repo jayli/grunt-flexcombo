@@ -30,7 +30,13 @@ module.exports = function (grunt) {
         var that = this;
         var pwd = process.cwd();
         var port = options.port || '80';
-        var proxyport = options.proxyport || 8090;
+        var proxyport = options.proxyport || 8080;
+
+	    // anyproxy 端口配置
+	    var webConfigPort = options.webConfigPort || 8082;
+	    var webPort = options.webPort || 8002;
+	    var socketPort = options.socketPort || 8003;
+
 	    // 是否启动 weinre
 	    var startWeinre = options.startWeinre;
 	    var weinrePort = options.weinrePort || 9090;
@@ -70,18 +76,24 @@ module.exports = function (grunt) {
 
 		// 初始化 anyproxy
 	    new proxy.proxyServer({
-		    type     : "http",
-		    port     : proxyport,
-		    hostname : "localhost",
-		    rule     : ProxyRule({
-			    prefix: prefix,
-			    filter: filter,
-			    port: port,
-			    proxyHosts: proxyHosts,
-			    target: target,
-			    proxy: proxyIfPageConfig,
-			    pwd: pwd
-		    })
+		    type          : "http",
+		    port          : proxyport,
+		    // port for web interface
+		    webPort       : webPort,
+		    // internal port for web socket, replace this when it is conflict with your own service
+		    socketPort    : socketPort,
+		    // internal port for web config(beta), replace this when it is conflict with your own service
+		    webConfigPort : webConfigPort,
+		    hostname      : "localhost",
+		    rule          : ProxyRule({
+							    prefix: prefix,
+							    filter: filter,
+							    port: port,
+							    proxyHosts: proxyHosts,
+							    target: target,
+							    proxy: proxyIfPageConfig,
+							    pwd: pwd
+						    })
 	    });
 
 	    // 启动本地服务
@@ -102,7 +114,6 @@ module.exports = function (grunt) {
 				    /**
 				     * 如果请求的是目录路径，展示该目录下的文件和文件夹列表
 				     */
-
 				    if (!/\/$/.test(req.url)) {
 					    res.writeHead(302, {'Content-Type': 'text/html'});
 					    res.end('<script>window.location.href += "/";</script>');
@@ -175,7 +186,7 @@ module.exports = function (grunt) {
 	    utils.showProxyHosts(proxyHosts);
 
 	    console.log('请访问以下链接查看 anyproxy 网络监控：');
-	    console.log('    ' + utils.green('http://localhost:8002'));
+	    console.log('    ' + utils.green('http://localhost:' + webPort + ''));
 
 	    // 打开 weiner
 	    if(startWeinre) {

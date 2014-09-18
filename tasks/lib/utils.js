@@ -11,7 +11,7 @@ var path = require('path');
  * @param proxyHosts
  */
 function showProxyHosts(proxyHosts) {
-	console.log('当前已代理以下域名的请求：')
+	console.log('当前已代理以下域名的请求：');
 	if (typeof proxyHosts != 'object') {
 		return;
 	}
@@ -21,10 +21,8 @@ function showProxyHosts(proxyHosts) {
 }
 
 function consoleColor(str, num) {
-	if (!num) {
-		num = '32';
-	}
-	return "\033[" + num + "m" + str + "\033[0m"
+	num = num || '32';
+	return "\033[" + num + "m" + str + "\033[0m";
 }
 
 function green(str) {

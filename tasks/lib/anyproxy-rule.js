@@ -4,6 +4,7 @@
  */
 var url = require('url');
 var path = require('path');
+var fs = require('fs');
 var _ = require('underscore');
 var mockjs = require('mockjs');
 var cheerio = require('cheerio');
@@ -173,33 +174,42 @@ module.exports = function (globalConfig) {
 			var hostname = option.hostname;
 			var isMatchCdnHost = _.contains(['a.tbcdn.cn', 'g.tbcdn.cn', 'g.assets.daily.taobao.net'], hostname);
 			var isMatchProxyHosts = _.contains(globalConfig.proxyHosts, hostname);
+			var isLocalPathExists = true;
 
 			if (isMatchProxyHosts) {
 				// 匹配上需代理的域名了，先处理一下 filter
-				newOption.path = globalConfig.prefix + newOption.path;
-				var alias_path = newOption.path;
+
+				var alias_path = path.join(globalConfig.prefix, newOption.path);
 				var filters = globalConfig.filter;
 				for (var i in filters) {
 					var regex = new RegExp(i, 'i');
 					alias_path = alias_path.replace(regex, filters[i]);
 				}
-				if (alias_path != newOption.path) {
-					console.log(utils.red('[Proxy Page] ') + ' ' + utils.yellow(newOption.path));
+
+				// 根据请求拼接出的映射到本地访问路径
+
+				// 将请求路径转换为相对文件目录路径
+				var realAliasPath = alias_path.split('?')[0].replace(globalConfig.prefix, '');
+
+				// 根据 pwd 和 target 拼接成绝对文件目录路径
+				var localPath = path.join(globalConfig.pwd, globalConfig.target, realAliasPath);
+
+				// 检查该路径在本地是否存在
+				isLocalPathExists = fs.existsSync(localPath);
+
+				if ((alias_path != newOption.path) && isLocalPathExists) {
+
+					console.log(utils.red('[Proxy Request] ') + ' ' + utils.yellow(newOption.path));
 					console.log(utils.green('\t=>  ' + alias_path));
 					newOption.path = alias_path;
 				}
 			}
 
-			if (isMatchCdnHost || isMatchProxyHosts) {
-
-				// 如果请求域名为 assets cdn，转发到 flex-combo 服务
+			// 如果请求域名为 assets cdn，或者为代理域名并且访问路径在本地 target 下存在，转发到 flex-combo 服务
+			if (isMatchCdnHost || (isMatchProxyHosts && isLocalPathExists)) {
 				newOption.hostname = 'localhost';
 				newOption.port = globalConfig.port;
 			}
-
-//			if(newOption.hostname == utils.getLocalIp()) {
-//				newOption.hostname = 'localhost';
-//			}
 
 			return newOption;
 		},

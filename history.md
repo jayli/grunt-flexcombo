@@ -29,3 +29,6 @@
 
 ### 0.2.3
 - [!] 升级 anyproxy 依赖，支持端口号可配置
+
+### 0.2.4
+- [!] 更新 `anyproxy-rule.js` 文件 `replaceRequestOption`，符合代理域名规则下的请求转发到 `flex-combo` 先做本地检查，避免本地没有导致请求 404

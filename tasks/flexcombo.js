@@ -177,10 +177,19 @@ module.exports = function (grunt) {
 		    }
 	    });
 
+	    console.log('\nAnyproxy web config service running at ' + utils.blue('http://127.0.0.1:' + webConfigPort));
+	    console.log('  > 可通过 flexocombo 配置项 ' + utils.yellow('webConfigPort') + ' 更改端口号');
+	    console.log('\nAnyproxy web monitor service running at ' + utils.blue('http://127.0.0.1:' + webPort));
+	    console.log('  > 可通过 flexocombo 配置项 ' + utils.yellow('webPort') + ' 更改端口号');
+	    console.log('\nAnyproxy web socket service running at ' + utils.blue('http://127.0.0.1:' + socketPort));
+	    console.log('  > 可通过 flexocombo 配置项 ' + utils.yellow('socketPort') + ' 更改端口号');
 	    console.log('\nFlex Combo Server running at ' + utils.blue('http://127.0.0.1:' + port));
+	    console.log('  > 可通过 flexocombo 配置项 ' + utils.yellow('port') + ' 更改端口号');
 
-	    console.log('\n  请为你的浏览器或移动设备配置 HTTP 代理: '
+	    console.log('\n 请为你的浏览器或移动设备配置 HTTP 代理: '
 		    + utils.green('127.0.0.1(浏览器) / ' + localIpAddr + '(移动设备)' + ' : ' + proxyport));
+	    console.log('  > 可通过 flexocombo 配置项 ' + utils.yellow('proxyport') + ' 更改端口号');
+
 	    console.log('\nHelp: ' + utils.blue('http://groups.alidemo.cn/trip-tools/clam-doc/intro/dev-debug.html'));
 
 	    utils.showProxyHosts(proxyHosts);
@@ -198,12 +207,17 @@ module.exports = function (grunt) {
 		    } else {
 			    console.log('请访问以下链接查看 weinre 控制面板：');
 			    console.log('    ' + utils.green('http://' + localIpAddr + ':' + weinrePort + '/client/#anonymous'));
+			    console.log('\n Weinre service running at ' + utils.blue('http://127.0.0.1:' + weinrePort));
+			    console.log('  > 可通过 flexocombo 配置项 ' + utils.yellow('weinrePort') + ' 更改端口号');
+
 			    exec('weinre --boundHost ' + localIpAddr + ' --httpPort ' + weinrePort, function(code, output) {
 
-				});
+			    });
 		    }
 
 	    }
+	    console.log(utils.yellow('如遇到 Error: listen EADDRINUSE 报错提示，请检查以上端口号是否被占用。'));
+
     });
 
 };

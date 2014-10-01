@@ -12,6 +12,8 @@ var formidable = require('formidable');
 var dnsSync = require('dns-sync');
 var iconv = require('iconv-lite');
 var utils = require('./utils');
+var sass = require('node-sass');
+var less = require('less');
 
 /**
  * 检查请求的 host 是否需要本地接口 Mock
@@ -48,10 +50,27 @@ module.exports = function (globalConfig) {
 		//if the return value is true, anyproxy will call dealLocalResponse to get response data and will not send request to remote server anymore
 		shouldUseLocalResponse: function (req, reqBody) {
 
+
 			var reqHost = req.headers.host;
 			if (_isNeedIfProxy(globalConfig.proxy.interface.hosts, reqHost)) {
 				console.log(utils.yellow('[DNS Resolve Failed]: ' + reqHost));
 				console.log(utils.yellow('\t Get Repsponse From Local Interface Mock'));
+				return true;
+			}
+
+			var pwd = globalConfig.pwd;
+            var absPath = path.normalize(path.join(pwd,'src',req.url.replace(/\?.+/i,'').replace(/^http:\/\/[^\/]+/i,'')));
+			var isCSS = /\.css$/i.test(absPath);
+
+			if(!isCSS){
+				return false;
+			}
+
+			if(!fs.existsSync(absPath) && fs.existsSync(absPath.replace(/\.css$/i,'.scss'))){
+				return true;
+			}
+
+			if(!fs.existsSync(absPath) && fs.existsSync(absPath.replace(/\.css$/i,'.less'))){
 				return true;
 			}
 
@@ -68,6 +87,34 @@ module.exports = function (globalConfig) {
 			var pwd = globalConfig.pwd;
 			var ifProxyConfig = globalConfig.proxy.interface;
 
+			// added by jayli，处理sass 和less文件解析
+            var absPath = path.normalize(path.join(pwd,'src',req.url.replace(/\?.+/i,'').replace(/^http:\/\/[^\/]+/i,'')));
+			var isCSS = /\.css$/i.test(absPath);
+
+			if(isCSS && !fs.existsSync(absPath) && fs.existsSync(absPath.replace(/\.css$/i,'.scss'))){
+				var r_css = sass.renderSync({
+					file: absPath.replace(/\.css$/i,'.scss'),
+					success: function (css, map) {
+					}
+				});
+				callback(200, {'Content-Type': 'text/css'}, r_css);
+				return;
+			}
+
+			if(isCSS && !fs.existsSync(absPath) && fs.existsSync(absPath.replace(/\.css$/i,'.less'))){
+				var buff = fs.readFileSync(absPath.replace(/\.css$/i,'.less'));
+				var charset = isUtf8(buff) ? 'utf8' : 'gbk';
+				var fContent = iconv.decode(buff, charset);
+				var r_css = new(less.Parser)({
+					processImports:false
+				}).parse(fContent,function(e,tree){
+					return tree.toCSS();
+				});    
+				callback(200, {'Content-Type': 'text/css'}, r_css);
+				return;
+			}
+
+			// 处理MockJS
 			if (_isNeedIfProxy(ifProxyConfig.hosts, req.headers.host)) {
 
 				var execScriptPath = path.join(pwd, ifProxyConfig.script);
@@ -173,6 +220,7 @@ module.exports = function (globalConfig) {
 			var newOption = option;
 			var hostname = option.hostname;
 			var isMatchCdnHost = _.contains(['a.tbcdn.cn', 'g.tbcdn.cn', 'g.assets.daily.taobao.net'], hostname);
+			var isCSS = /\.css$/i.test(req.url.replace(/\?.+/i,''));
 			var isMatchProxyHosts = _.contains(globalConfig.proxyHosts, hostname);
 			var isLocalPathExists = true;
 
@@ -205,9 +253,10 @@ module.exports = function (globalConfig) {
 				}
 			}
 
+
 			// 如果请求域名为 assets cdn，或者为代理域名并且访问路径在本地 target 下存在，转发到 flex-combo 服务
 			if (isMatchCdnHost || (isMatchProxyHosts && isLocalPathExists)) {
-				newOption.hostname = 'localhost';
+				newOption.hostname = '127.0.0.1';
 				newOption.port = globalConfig.port;
 			}
 

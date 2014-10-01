@@ -1,7 +1,7 @@
 {
   "name": "grunt-flexcombo",
   "description": "FlexCombo",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "homepage": "",
   "author": {
     "name": "bachi",
@@ -32,13 +32,15 @@
     "anyproxy": "^2.4.3",
     "cheerio": "^0.17.0",
     "dns-sync": "^0.1.0",
-    "flex-combo": "^0.5.14",
+    "flex-combo": "0.5.12",
     "formidable": "^1.0.14",
     "iconv-lite": "^0.4.4",
     "jayli-server": "0.0.18",
     "mockjs": "^0.1.1",
     "shelljs": "^0.3.0",
-    "underscore": "^1.6.0"
+    "underscore": "^1.6.0",
+    "less": "~1.7.3",
+    "node-sass": "~0.9.3"
   },
   "peerDependencies": {
     "grunt": "~0.4.1"
@@ -46,8 +48,58 @@
   "keywords": [
     "gruntplugin"
   ],
-  "readmeFilename": "README.md",
-  "readme": "",
-  "_id": "grunt-flexcombo@0.1.26",
-  "_from": "grunt-flexcombo@"
+  "_id": "grunt-flexcombo@0.2.5",
+  "_from": "grunt-flexcombo@*",
+  "gitHead": "30c23434ba35573c86896f5c38f8e6e6f053e9f9",
+  "_shasum": "bdbffbe0d377ceaf1887f40a0ef9c225435ac28b",
+  "_npmVersion": "2.0.0-beta.3",
+  "_npmUser": {
+    "name": "dickeylth",
+    "email": "dickeylth@gmail.com"
+  },
+  "maintainers": [
+    {
+      "name": "bachi",
+      "email": "bachi@taobao.com"
+    },
+    {
+      "name": "wayfind",
+      "email": "whyer1@gmail.com"
+    },
+    {
+      "name": "paulguo",
+      "email": "badkaikai@gmail.com"
+    },
+    {
+      "name": "gourdboy",
+      "email": "gourdboy@gmail.com"
+    },
+    {
+      "name": "wylking2000",
+      "email": "wylking2000@163.com"
+    },
+    {
+      "name": "neekey",
+      "email": "ni184775761@gmail.com"
+    },
+    {
+      "name": "dickeylth",
+      "email": "dickeylth@gmail.com"
+    },
+    {
+      "name": "aloysious",
+      "email": "aloysiousliang@gmail.com"
+    }
+  ],
+  "dist": {
+    "shasum": "bdbffbe0d377ceaf1887f40a0ef9c225435ac28b",
+    "size": 16324,
+    "noattachment": false,
+    "key": "grunt-flexcombo/-/grunt-flexcombo-0.2.5.tgz",
+    "tarball": "http://registry.npm.alibaba-inc.com/grunt-flexcombo/download/grunt-flexcombo-0.2.5.tgz"
+  },
+  "directories": {},
+  "publish_time": 1411717461271,
+  "_cnpm_publish_time": 1411717461271,
+  "_resolved": "http://registry.npm.alibaba-inc.com/grunt-flexcombo/download/grunt-flexcombo-0.2.5.tgz"
 }

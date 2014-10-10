@@ -1,7 +1,7 @@
 {
   "name": "grunt-flexcombo",
   "description": "FlexCombo",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "homepage": "",
   "author": {
     "name": "bachi",
@@ -35,7 +35,7 @@
     "flex-combo": "0.5.12",
     "formidable": "^1.0.14",
     "iconv-lite": "^0.4.4",
-    "jayli-server": "0.0.18",
+    "jayli-server": "",
     "mockjs": "^0.1.1",
     "shelljs": "^0.3.0",
     "underscore": "^1.6.0",

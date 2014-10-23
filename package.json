@@ -1,7 +1,7 @@
 {
   "name": "grunt-flexcombo",
   "description": "FlexCombo",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "homepage": "",
   "author": {
     "name": "bachi",
@@ -32,15 +32,16 @@
     "anyproxy": "^2.4.3",
     "cheerio": "^0.17.0",
     "dns-sync": "^0.1.0",
-    "flex-combo": "0.5.12",
+    "flex-combo": "0.6.4",
     "formidable": "^1.0.14",
     "iconv-lite": "^0.4.4",
+    "is-utf8": "^0.2.0",
     "jayli-server": "",
-    "mockjs": "^0.1.1",
-    "shelljs": "^0.3.0",
-    "underscore": "^1.6.0",
     "less": "~1.7.3",
-    "node-sass": "~0.9.3"
+    "mockjs": "^0.1.1",
+    "node-sass": "~0.9.3",
+    "shelljs": "^0.3.0",
+    "underscore": "^1.6.0"
   },
   "peerDependencies": {
     "grunt": "~0.4.1"

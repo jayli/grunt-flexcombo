@@ -35,3 +35,8 @@
 
 ### 0.2.5
 - [!] 更新启动提示信息，展示所有使用中的端口号
+
+### 0.2.8
+- [!] 兼容 anyproxy API 变更：`replaceServerResData` => `replaceServerResDataAsync`
+- [!] 请求转发到 flexcombo 的 hostname 由 `127.0.0.1` 改为 `utils.js` 里读取本机 IP 的方法，修复移动端挂代理起 `grunt demo` 访问本机页面阻塞
+- [!] Less/Sass 解析 bugfix 修复 `isUtf8` 引用

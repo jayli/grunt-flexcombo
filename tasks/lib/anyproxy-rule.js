@@ -14,6 +14,7 @@ var iconv = require('iconv-lite');
 var utils = require('./utils');
 var sass = require('node-sass');
 var less = require('less');
+var isUtf8 = require('is-utf8');
 
 /**
  * 检查请求的 host 是否需要本地接口 Mock
@@ -256,7 +257,7 @@ module.exports = function (globalConfig) {
 
 			// 如果请求域名为 assets cdn，或者为代理域名并且访问路径在本地 target 下存在，转发到 flex-combo 服务
 			if (isMatchCdnHost || (isMatchProxyHosts && isLocalPathExists)) {
-				newOption.hostname = '127.0.0.1';
+				newOption.hostname = utils.getLocalIp();
 				newOption.port = globalConfig.port;
 			}
 
@@ -296,7 +297,7 @@ module.exports = function (globalConfig) {
 		//replace the response from the server before it's sent to the user
 		//you may return either a Buffer or a string
 		//serverResData is a Buffer, you may get its content by calling serverResData.toString()
-		replaceServerResData: function (req, res, serverResData) {
+		replaceServerResDataAsync: function(req, res, serverResData, callback){
 
 			var reqUrl = req.url;
 			var parsedRequest = url.parse(reqUrl, true);
@@ -334,7 +335,6 @@ module.exports = function (globalConfig) {
 
 						// 先检查代理脚本是否存在
 						execScriptPath = path.join(globalConfig.pwd, webPageProxyScriptPath);
-						execScript;
 
 						// 加载 proxy 脚本
 						try {
@@ -431,7 +431,7 @@ module.exports = function (globalConfig) {
 
 			}
 
-			return serverResData;
+			callback && callback(serverResData);
 		},
 
 		//在请求返回给用户前的延迟时间

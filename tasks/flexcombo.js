@@ -44,6 +44,7 @@ module.exports = function (grunt) {
 	    var target = options.target;
         var localPath = options.target;
         var filter = options.filter || {};
+	    var needHttps = options.needHttps;      // 是否需要启用 https 监控
 	    var localIpAddr = utils.getLocalIp();
 
 	    // 代理接口和页面的默认配置
@@ -74,9 +75,11 @@ module.exports = function (grunt) {
         }
         var comboInst = flexCombo(process.cwd(), obj, options);
 
-		//create cert when you want to use https features
-		//please manually trust this rootCA when it is the first time you run it
-	    !proxy.isRootCAFileExists() && proxy.generateRootCA();
+	    if(needHttps) {
+		    //create cert when you want to use https features
+		    //please manually trust this rootCA when it is the first time you run it
+		    !proxy.isRootCAFileExists() && proxy.generateRootCA();
+	    }
 
 		// 初始化 anyproxy
 	    new proxy.proxyServer({
@@ -96,6 +99,7 @@ module.exports = function (grunt) {
 							    proxyHosts: proxyHosts,
 							    target: target,
 							    proxy: proxyIfPageConfig,
+			                    needHttps: needHttps,
 							    pwd: pwd
 						    })
 	    });

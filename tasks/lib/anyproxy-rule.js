@@ -451,7 +451,7 @@ module.exports = function (globalConfig) {
 		//是否截获https请求
 		//should intercept https request, or it will be forwarded to real server
 		shouldInterceptHttpsReq: function (req) {
-			return true;
+			return !!globalConfig.needHttps;
 		}
 	}
 };

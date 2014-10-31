@@ -40,3 +40,7 @@
 - [!] 兼容 anyproxy API 变更：`replaceServerResData` => `replaceServerResDataAsync`
 - [!] 请求转发到 flexcombo 的 hostname 由 `127.0.0.1` 改为 `utils.js` 里读取本机 IP 的方法，修复移动端挂代理起 `grunt demo` 访问本机页面阻塞
 - [!] Less/Sass 解析 bugfix 修复 `isUtf8` 引用
+
+### 0.2.9
+- [!] 对匹配 cdn 资源判断请求 url 中是否包含 `urls` 字符串，避免代理不应该代理的线上资源
+- [!] 加入 anyproxy 兼容 https 请求的配置，支持 https 请求的监控

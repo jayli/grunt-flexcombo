@@ -218,12 +218,15 @@ module.exports = function (globalConfig) {
 		//you may return a customized option to replace the original option
 		//you should not write content-length header in options, since anyproxy will handle it for you
 		replaceRequestOption: function (req, option) {
+			var reqUrl = req.url;
 			var newOption = option;
 			var hostname = option.hostname;
 			var isMatchCdnHost = _.contains(['a.tbcdn.cn', 'g.tbcdn.cn', 'g.assets.daily.taobao.net'], hostname);
-			var isCSS = /\.css$/i.test(req.url.replace(/\?.+/i,''));
+			var isCSS = /\.css$/i.test(reqUrl.replace(/\?.+/i,''));
 			var isMatchProxyHosts = _.contains(globalConfig.proxyHosts, hostname);
 			var isLocalPathExists = true;
+			var urls = globalConfig.urls;
+			var isMatchUrl = (reqUrl.indexOf(urls) != -1);
 
 			if (isMatchProxyHosts) {
 				// 匹配上需代理的域名了，先处理一下 filter
@@ -254,9 +257,8 @@ module.exports = function (globalConfig) {
 				}
 			}
 
-
 			// 如果请求域名为 assets cdn，或者为代理域名并且访问路径在本地 target 下存在，转发到 flex-combo 服务
-			if (isMatchCdnHost || (isMatchProxyHosts && isLocalPathExists)) {
+			if ((isMatchCdnHost && isMatchUrl) || (isMatchProxyHosts && isLocalPathExists)) {
 				newOption.hostname = utils.getLocalIp();
 				newOption.port = globalConfig.port;
 			}
@@ -449,7 +451,7 @@ module.exports = function (globalConfig) {
 		//是否截获https请求
 		//should intercept https request, or it will be forwarded to real server
 		shouldInterceptHttpsReq: function (req) {
-			return false;
+			return true;
 		}
 	}
 };

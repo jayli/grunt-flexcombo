@@ -74,6 +74,10 @@ module.exports = function (grunt) {
         }
         var comboInst = flexCombo(process.cwd(), obj, options);
 
+		//create cert when you want to use https features
+		//please manually trust this rootCA when it is the first time you run it
+	    !proxy.isRootCAFileExists() && proxy.generateRootCA();
+
 		// 初始化 anyproxy
 	    new proxy.proxyServer({
 		    type          : "http",

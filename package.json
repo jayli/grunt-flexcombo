@@ -1,7 +1,7 @@
 {
   "name": "grunt-flexcombo",
   "description": "FlexCombo",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "homepage": "",
   "author": {
     "name": "bachi",
@@ -39,7 +39,7 @@
     "jayli-server": "",
     "less": "~1.7.3",
     "mockjs": "^0.1.1",
-    "node-sass": "~0.9.3",
+    "node-sass": "~0.9.6",
     "shelljs": "^0.3.0",
     "underscore": "^1.6.0"
   },

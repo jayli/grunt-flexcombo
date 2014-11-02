@@ -42,8 +42,11 @@
 - [!] Less/Sass 解析 bugfix 修复 `isUtf8` 引用
 
 ### 0.2.9
-- [!] 对匹配 cdn 资源判断请求 url 中是否包含 `urls` 字符串，避免代理不应该代理的线上资源
+- <s>[!] 对匹配 cdn 资源判断请求 url 中是否包含 `urls` 字符串，避免代理不应该代理的线上资源</s>，有bug
 - [!] 加入 anyproxy 兼容 https 请求的配置，支持 https 请求的监控
 
 ### 0.2.10
 - [!] https 监控加配置项打开
+
+### 0.2.11
+- [!] bugfix for  0.2.9 prefix 判断

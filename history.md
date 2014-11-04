@@ -50,3 +50,7 @@
 
 ### 0.2.11
 - [!] bugfix for  0.2.9 prefix 判断
+
+### 0.2.14
+- [!] bugfix for mocker，修复`replaceServerResDataAsync`方法中接口 mock 回调 bug
+- [!] bugfix for 空 target 时代理失效

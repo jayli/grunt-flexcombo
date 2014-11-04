@@ -402,7 +402,7 @@ module.exports = function (globalConfig) {
 			}
 
 			// 检查 interface proxy
-			var reqHost = req.headers.host;
+			var reqHost = req.headers.host.split(':')[0];
 			var ifProxyConfig = globalConfig.proxy.interface;
 			if (_.contains(ifProxyConfig.hosts, reqHost)) {
 
@@ -427,6 +427,7 @@ module.exports = function (globalConfig) {
 
 					var parsedJsonpResponse = utils.parseJsonp(serverResData.toString().trim());
 
+					console.log('Mock modify result: ');
 					console.log(parsedJsonpResponse);
 
 					var result = JSON.stringify(execScript(reqUrl, reqQueryParams, parsedJsonpResponse, {
@@ -434,8 +435,7 @@ module.exports = function (globalConfig) {
 						mockjs: mockjs
 					}));
 
-					return callbackName ? (callbackName + '(' + result + ')') : result;
-
+					callback && callback(callbackName ? (callbackName + '(' + result + ')') : result);
 				}
 
 			}

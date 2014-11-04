@@ -113,7 +113,7 @@ module.exports = function (grunt) {
 			     */
 			    // get true path
 			    var parsedReqUrl = url.parse(req.url, true);
-			    var truePath = path.resolve(pwd, localPath, req.url.replace('http://' + req.headers.host, '').replace(prefix, '.'));
+			    var truePath = path.resolve(pwd, localPath, req.url.replace('http://' + req.headers.host, '').replace(prefix, './'));
 			    truePath = truePath.replace(/\?.*$/, '');
 			    truePath = truePath.replace(/#.*$/, '').replace('http:/' + req.headers.host, '');
 			    var removedPrefixPath = parsedReqUrl.pathname.replace(prefix, '');

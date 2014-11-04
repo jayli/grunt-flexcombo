@@ -229,7 +229,7 @@ module.exports = function (globalConfig) {
 			// 获取前缀（flexcombo 的 urls 配置项）
 			// 替换掉最前的“/”以避免 combo 请求（http://cdnhost/??group/projectA/...,group/projectB/... ）无法代理
 			var prefix = globalConfig.prefix.replace(/^\//, '');
-			var isMatchUrl = (reqUrl.indexOf(prefix) != -1);
+			var isMatchUrl = ((prefix != '') && (reqUrl.indexOf(prefix) != -1));
 
 			if (isMatchProxyHosts) {
 				// 匹配上需代理的域名了，先处理一下 filter

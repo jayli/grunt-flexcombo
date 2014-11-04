@@ -54,3 +54,7 @@
 ### 0.2.14
 - [!] bugfix for mocker，修复`replaceServerResDataAsync`方法中接口 mock 回调 bug
 - [!] bugfix for 空 target 时代理失效
+
+### 0.2.15
+- [!] bugfix for mocker，处理非 UTF-8 编码接口返回 bug
+- [!] flex-combo 限定依赖 0.6.4

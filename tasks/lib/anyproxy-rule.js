@@ -51,7 +51,6 @@ module.exports = function (globalConfig) {
 		//if the return value is true, anyproxy will call dealLocalResponse to get response data and will not send request to remote server anymore
 		shouldUseLocalResponse: function (req, reqBody) {
 
-
 			var reqHost = req.headers.host;
 			if (_isNeedIfProxy(globalConfig.proxy.interface.hosts, reqHost)) {
 				console.log(utils.yellow('[DNS Resolve Failed]: ' + reqHost));
@@ -237,8 +236,10 @@ module.exports = function (globalConfig) {
 				var alias_path = path.join(globalConfig.prefix, newOption.path);
 				var filters = globalConfig.filter;
 				for (var i in filters) {
-					var regex = new RegExp(i, 'i');
-					alias_path = alias_path.replace(regex, filters[i]);
+					if(filters.hasOwnProperty(i)) {
+						var regex = new RegExp(i, 'i');
+						alias_path = alias_path.replace(regex, filters[i]);
+					}
 				}
 
 				// 根据请求拼接出的映射到本地访问路径
@@ -312,10 +313,25 @@ module.exports = function (globalConfig) {
 			var parsedRequest = url.parse(reqUrl, true);
 
 			var execScriptPath,
-				execScript;
+				execScript,
+				contentType = res.headers['content-type'],
+				responseCharset = 'utf-8',
+				charsetMatch = contentType.match(/charset=([\w-]+)/ig);
+
+			/**
+			 * 编码处理
+			 */
+			// 检测是否响应体为 utf-8 编码，便于后面转码处理
+			if (charsetMatch && (charsetMatch.length != 0)) {
+				responseCharset = charsetMatch[0].split('=')[1];
+			}
+			// iconv-lite 不支持 gb2312，https://www.npmjs.org/package/iconv-lite#readme
+			if (responseCharset.toUpperCase() == 'GB2312') {
+				// 兼容为 GBK 处理
+				responseCharset = 'GBK';
+			}
 
 			// 检查 webpage proxy
-			var contentType = res.headers['content-type'];
 			if (contentType && /text\/html/i.test(contentType)) {
 
 				var isMatchAnyPageUrl = false;
@@ -354,28 +370,12 @@ module.exports = function (globalConfig) {
 
 						} catch (e) {
 
-							console.log(utils.yellow('[Webpage Proxy] Load Script Failed: ' + execScriptPath
-								+ '\r\n' + JSON.stringify(e)));
+							console.log(utils.yellow('[Webpage Proxy] Load Script Failed: ' + execScriptPath + '\r\n' + JSON.stringify(e)));
 							return serverResData;
 						}
 
 
 						if(execScript) {
-
-							/**
-							 * 编码处理
-							 */
-							var responseCharset = 'utf-8';
-							// 检测是否响应体为 utf-8 编码，便于后面转码处理
-							var charsetMatch = contentType.match(/charset=([\w-]+)/ig);
-							if (charsetMatch && (charsetMatch.length != 0)) {
-								responseCharset = charsetMatch[0].split('=')[1];
-							}
-							// iconv-lite 不支持 gb2312，https://www.npmjs.org/package/iconv-lite#readme
-							if (responseCharset.toUpperCase() == 'GB2312') {
-								// 兼容为 GBK 处理
-								responseCharset = 'GBK';
-							}
 
 							// 根据响应头指定的编码进行解码
 							var pageContent = iconv.decode(serverResData, responseCharset);
@@ -427,20 +427,27 @@ module.exports = function (globalConfig) {
 
 					var parsedJsonpResponse = utils.parseJsonp(serverResData.toString().trim());
 
-					console.log('Mock modify result: ');
-					console.log(parsedJsonpResponse);
-
+					// 用户脚本执行结果
 					var result = JSON.stringify(execScript(reqUrl, reqQueryParams, parsedJsonpResponse, {
 						_: _,
 						mockjs: mockjs
 					}));
 
-					callback && callback(callbackName ? (callbackName + '(' + result + ')') : result);
+					// 处理 jsonp
+					result = callbackName ? (callbackName + '(' + result + ')') : result;
+
+					/**
+					 * 编码处理
+					 */
+					var resultBuffer = iconv.encode(result, responseCharset);
+
+					callback && callback(resultBuffer);
 				}
 
-			}
+			} else {
 
-			callback && callback(serverResData);
+				callback && callback(serverResData);
+			}
 		},
 
 		//在请求返回给用户前的延迟时间

@@ -207,10 +207,12 @@ module.exports = function (globalConfig) {
 		//替换向服务器发出的请求协议（http和https的替换）
 		//replace the request protocol when sending to the real server
 		//protocol : "http" or "https"
+		/*
 		replaceRequestProtocol: function (req, protocol) {
 			var newProtocol = protocol;
 			return newProtocol;
 		},
+		*/
 
 		//替换向服务器发出的请求参数（option)
 		//req is user's request which will be sent to the proxy server, docs : http://nodejs.org/api/http.html#http_http_request_options_callback
@@ -224,11 +226,8 @@ module.exports = function (globalConfig) {
 			var isCSS = /\.css$/i.test(reqUrl.replace(/\?.+/i,''));
 			var isMatchProxyHosts = _.contains(globalConfig.proxyHosts, hostname);
 			var isLocalPathExists = true;
-
 			// 获取前缀（flexcombo 的 urls 配置项）
-			// 替换掉最前的“/”以避免 combo 请求（http://cdnhost/??group/projectA/...,group/projectB/... ）无法代理
 			var prefix = globalConfig.prefix.replace(/^\//, '');
-			var isMatchUrl = ((prefix != '') && (reqUrl.indexOf(prefix) != -1));
 
 			if (isMatchProxyHosts) {
 				// 匹配上需代理的域名了，先处理一下 filter
@@ -262,18 +261,32 @@ module.exports = function (globalConfig) {
 			}
 
 			// 如果请求域名为 assets cdn，或者为代理域名并且访问路径在本地 target 下存在，转发到 flex-combo 服务
-			if ((isMatchCdnHost && isMatchUrl) || (isMatchProxyHosts && isLocalPathExists)) {
+			if ((isMatchCdnHost) || (isMatchProxyHosts && isLocalPathExists)) {
 				newOption.hostname = utils.getLocalIp();
 				newOption.port = globalConfig.port;
 
 				// 拼接到 {headers:{ host: 'xxx' }} 避免代理给 flexcombo 夯住
 				newOption.headers = newOption.headers || {};
-				newOption.headers.host = newOption.hostname + ':' + newOption.port;
+				newOption.headers.host = newOption.hostname;
+			}
+
+			// ?debug 模式支持，映射请求资源到源码
+			var referer = newOption.headers.referer;
+			if(referer) {
+				var refQuery = url.parse(referer).query,
+					isDebug = refQuery && (/debug/.test(refQuery));
+
+				// 如果该请求不包含当前 prefix 字段才做替换，避免替换了不存在source的资源
+				var isMatchUrl = ((prefix != '') && (reqUrl.indexOf(prefix) != -1));
+				if(isDebug && !isMatchUrl) {
+					newOption.path = newOption.path.replace(/-min\.js/ig, '.js');
+				}
 			}
 
 			return newOption;
 		},
 
+		/* 注释掉，需要修改时再解开注释
 		//替换请求的body
 		//replace the request body
 		replaceRequestData: function (req, data) {
@@ -302,6 +315,7 @@ module.exports = function (globalConfig) {
 			var newHeader = header;
 			return newHeader;
 		},
+		*/
 
 		//替换服务器响应的数据
 		//replace the response from the server before it's sent to the user
@@ -314,7 +328,7 @@ module.exports = function (globalConfig) {
 
 			var execScriptPath,
 				execScript,
-				contentType = res.headers['content-type'],
+				contentType = res.headers['content-type'] || '',
 				responseCharset = 'utf-8',
 				charsetMatch = contentType.match(/charset=([\w-]+)/ig);
 
@@ -390,9 +404,7 @@ module.exports = function (globalConfig) {
 							var replacedWebPage = $.html();
 
 							// 转回响应头指定的编码
-							var encodedWebPage = iconv.encode(replacedWebPage, responseCharset);
-
-							return encodedWebPage;
+							callback && callback(iconv.encode(replacedWebPage, responseCharset));
 						}
 
 					}
@@ -452,10 +464,12 @@ module.exports = function (globalConfig) {
 
 		//在请求返回给用户前的延迟时间
 		//add a pause before sending response to user
+		/*
 		pauseBeforeSendingResponse: function (req, res) {
-			var timeInMS = 1; //delay all requests for 1ms
+			var timeInMS = 0; //delay all requests for 1ms
 			return timeInMS;
 		},
+		*/
 
 
 		//=======================

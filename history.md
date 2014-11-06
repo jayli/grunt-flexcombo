@@ -58,3 +58,7 @@
 ### 0.2.15
 - [!] bugfix for mocker，处理非 UTF-8 编码接口返回 bug
 - [!] flex-combo 限定依赖 0.6.4
+
+### 0.2.16
+- [!] bugfix for flex-combo 转发
+- [!] 加入 `?debug` 模式支持，将代理的 `-min.js` 资源请求替换为 `.js` 请求方便调试

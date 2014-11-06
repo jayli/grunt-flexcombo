@@ -264,10 +264,6 @@ module.exports = function (globalConfig) {
 			if ((isMatchCdnHost) || (isMatchProxyHosts && isLocalPathExists)) {
 				newOption.hostname = utils.getLocalIp();
 				newOption.port = globalConfig.port;
-
-				// 拼接到 {headers:{ host: 'xxx' }} 避免代理给 flexcombo 夯住
-				newOption.headers = newOption.headers || {};
-				newOption.headers.host = newOption.hostname;
 			}
 
 			// ?debug 模式支持，映射请求资源到源码

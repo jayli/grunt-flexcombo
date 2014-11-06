@@ -62,3 +62,6 @@
 ### 0.2.16
 - [!] bugfix for flex-combo 转发
 - [!] 加入 `?debug` 模式支持，将代理的 `-min.js` 资源请求替换为 `.js` 请求方便调试
+
+### 0.2.17
+- [!] bugfix for compatible with latest flex-combo

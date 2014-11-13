@@ -34,7 +34,8 @@ author: @拔赤、@陶清
                     mockPath: '<%= pkg.mockPath %>',//指定本地mock的目录（路径）名，默认为"mock"
                     servlet:'?',
                     separator:',',
-                    charset:'utf8'
+                    charset:'utf8',
+                    livereload: true		// 指定是否开启 livereload，默认为 false，也可配置为 livereload 的端口号，与 `watch` 任务的配置保持一致
                 }
             },
 			debug:{
@@ -48,6 +49,7 @@ author: @拔赤、@陶清
 					charset:'utf8',//默认输出文件的编码
 					proxyHosts:['a.com','b.com','demo.com'],//本地服务的域名
 					startWeinre: false,		// 是否自动调用 weinre, H5 项目可选
+					livereload: true,		// 指定是否开启 livereload，默认为 false，也可配置为 livereload 的端口号，与 `watch` 任务的配置保持一致
 					weinrePort: 8091,		// 默认的 weinre 运行端口
 					// 代理配置
 					proxy: {

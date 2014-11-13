@@ -65,3 +65,6 @@
 
 ### 0.2.17
 - [!] bugfix for compatible with latest flex-combo
+
+### 0.2.19
+- [!] 加入 livereload 支持

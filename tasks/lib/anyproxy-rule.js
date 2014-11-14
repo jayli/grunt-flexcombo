@@ -260,8 +260,9 @@ module.exports = function (globalConfig) {
                 }
             }
 
-            // 如果请求域名为 assets cdn，或者为代理域名并且访问路径在本地 target 下存在，转发到 flex-combo 服务
-            if ((isMatchCdnHost) || (isMatchProxyHosts && isLocalPathExists)) {
+            var isMatchPrefix = ((prefix != '') && (reqUrl.indexOf(prefix) != -1));
+            // 如果请求域名为 assets cdn 且匹配 prefix，或者为代理域名并且访问路径在本地 target 下存在，转发到 flex-combo 服务
+            if ((isMatchCdnHost && isMatchPrefix) || (isMatchProxyHosts && isLocalPathExists)) {
                 newOption.hostname = utils.getLocalIp();
                 newOption.port = globalConfig.port;
             }
@@ -273,8 +274,7 @@ module.exports = function (globalConfig) {
                     isDebug = refQuery && (/debug/.test(refQuery));
 
                 // 如果该请求不包含当前 prefix 字段才做替换，避免替换了不存在source的资源
-                var isMatchUrl = ((prefix != '') && (reqUrl.indexOf(prefix) != -1));
-                if (isDebug && !isMatchUrl) {
+                if (isDebug && !isMatchPrefix) {
                     newOption.path = newOption.path.replace(/-min\.js/ig, '.js');
                 }
             }

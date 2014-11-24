@@ -71,3 +71,8 @@
 
 ### 0.2.20
 - [!] bugfix for compatible with latest flex-combo
+
+### 0.2.21
+- [!] bugfix for proxy compatible with windows
+- [!] bugfix for jsonp parse
+

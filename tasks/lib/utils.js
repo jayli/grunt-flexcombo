@@ -142,16 +142,7 @@ function parseJsonp(jsonpRet) {
     if (jsonpRet) {
 
         var ret = jsonpRet.replace(/^\w*\((.*)\)$/, '$1');
-
-        try {
-            ret = JSON.parse(ret);
-        } catch (e) {
-            console.log(red('Failed to parse ' + ret + ' to JSON'));
-            console.error(e);
-            return {};
-        }
-
-        return ret;
+        return JSON.parse(ret);
     }
 
     return {};

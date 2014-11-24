@@ -233,6 +233,10 @@ module.exports = function (globalConfig) {
                 // 匹配上需代理的域名了，先处理一下 filter
 
                 var alias_path = path.join(globalConfig.prefix, newOption.path);
+
+                // bugfix for windows path.sep '\\'，规范化为 linux '/'
+                alias_path = alias_path.split(path.sep).join('/');
+
                 var filters = globalConfig.filter;
                 for (var i in filters) {
                     if (filters.hasOwnProperty(i)) {
@@ -432,17 +436,24 @@ module.exports = function (globalConfig) {
 
                     var reqQueryParams = parsedRequest.query;
                     var callbackName = reqQueryParams.callback;
+                    var result = serverResData;
 
-                    var parsedJsonpResponse = utils.parseJsonp(serverResData.toString().trim());
+                    try {
 
-                    // 用户脚本执行结果
-                    var result = JSON.stringify(execScript(reqUrl, reqQueryParams, parsedJsonpResponse, {
-                        _: _,
-                        mockjs: mockjs
-                    }));
+                        var parsedJsonpResponse = utils.parseJsonp(serverResData.toString().trim());
 
-                    // 处理 jsonp
-                    result = callbackName ? (callbackName + '(' + result + ')') : result;
+                        // 用户脚本执行结果
+                        result = JSON.stringify(execScript(reqUrl, reqQueryParams, parsedJsonpResponse, {
+                            _: _,
+                            mockjs: mockjs
+                        }));
+
+                        // 处理 jsonp
+                        result = callbackName ? (callbackName + '(' + result + ')') : result;
+
+                    } catch (e) {
+
+                    }
 
                     /**
                      * 编码处理

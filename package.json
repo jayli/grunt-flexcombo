@@ -1,7 +1,7 @@
 {
   "name": "grunt-flexcombo",
   "description": "FlexCombo",
-  "version": "0.2.21",
+  "version": "0.2.22",
   "homepage": "",
   "author": {
     "name": "bachi",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://gitlab.alibaba-inc.com/trip/h5-test.git"
+    "url": "git@github.com:jayli/grunt-flexcombo.git"
   },
   "licenses": [
     {
@@ -32,7 +32,7 @@
     "anyproxy": "^2.4.3",
     "cheerio": "^0.17.0",
     "dns-sync": "^0.1.0",
-    "flex-combo": "",
+    "flex-combo": "~0.6.16",
     "formidable": "^1.0.14",
     "iconv-lite": "^0.4.4",
     "is-utf8": "^0.2.0",

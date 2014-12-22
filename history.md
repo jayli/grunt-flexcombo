@@ -76,3 +76,7 @@
 - [!] bugfix for proxy compatible with windows
 - [!] bugfix for jsonp parse
 
+### 0.2.22
+- [!] 锁定 flex-combo 的依赖到 `~0.6.16`
+
+
